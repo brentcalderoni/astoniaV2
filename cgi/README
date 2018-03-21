@@ -1,1 +1,25 @@
+Install webmin
+Install apache
 
+select apache then virtual host
+select cgi programs
+
+add alias
+
+FROM "/cgi-imp/"
+To "CGIDIR"
+
+
+Add to directives
+<Directory "CGIDIR">
+Order allow,deny
+Allow from all
+Options +ExecCGI
+Require all granted
+</Directory>
+
+
+Save and apply(top right corner refresh looking icon)
+
+
+May need to edit permissions of your dat files also
