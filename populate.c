@@ -850,6 +850,24 @@ void reset_char(int n)
 		if (ch[cn].used!=USE_ACTIVE) continue;
 		if (ch[cn].temp==n) {
 			xlog(" --> %s (%d) (%d,%d).",ch[cn].name,cn,ch[cn].x,ch[cn].y);
+            
+            //Check if char is owned by a spawner if so reset the spawner jsut like in do_char_killed.
+            if (ch[cn].data[97]) {
+                
+                if (it[ch[cn].data[97]].driver == 102)
+                {
+                    xlog("Reseting spawner");
+                    it[ch[cn].data[97]].data[9] = 0;
+                    it[ch[cn].data[97]].active = 1;
+                }
+                else xlog("Not a mob spawner");
+                
+                god_destroy_items(cn);
+                plr_map_remove(cn);
+                ch[cn].used=USE_EMPTY;
+                cnt++;
+            }
+            
 			god_destroy_items(cn);
 			plr_map_remove(cn);
 			ch[cn].used=USE_EMPTY;
