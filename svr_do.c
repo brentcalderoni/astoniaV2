@@ -1865,7 +1865,12 @@ void do_char_killed(int cn,int co)
 {
         int n,in,x,y,temp=0,m,tmp,wimp,cc=0,fn,r1,r2;
         unsigned long long mf;
-
+    //MOB SPAWNING
+    if (ch[co].data[111]) {
+        xlog("Reseting spawner");
+        it[ch[co].data[111]].data[9] = 0;
+        
+    }
         do_notify_char(co,NT_DIED,cn,0,0,0);
 
         if (cn) chlog(cn,"Killed %s (%d)",ch[co].name,co);

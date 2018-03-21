@@ -2709,6 +2709,7 @@ void use_driver(int cn,int in,int carried)
                                 case 67:        ret=use_garbage(cn,in); break;
                                 case 68:	ret=use_soulstone(cn,in); break;
                                 case 69:	ret=0; break;
+                                case 127:   ret=spawn_mob(in); break;//MOB SPAWNING
                                 default:        xlog("use_driver (use_driver.c): Unknown use_driver %d for item %d",it[in].driver,in);
                                                 ret=0; break;
                         }
@@ -2778,7 +2779,15 @@ void use_driver(int cn,int in,int carried)
                 }
         }
 }
-
+int spawn_mob(int in){
+    //MOB SPAWNING
+    if (it[in].data[9]==0) {
+        if (!pop_create_char_mob_spawner(it[in].data[0], 1, in)){
+            it[in].active = 5;
+        }
+    }
+    
+}
 int item_age(int in)
 {
         int act,st;
@@ -3186,7 +3195,19 @@ void item_tick_expire(void)
                         if (it[in].driver==33) pentagram(in);
                         if (it[in].driver==43) spiderweb(in);
                         if (it[in].driver==56) greenlingball(in);
-
+                    if (it[in].driver==127){
+                        /*MOB SPAWNING
+                         
+                         Start by checking if in contains data for a mob, if so just leave it be. If not and not active activate it. When it resets, it will useDriver above and spawn the mob in use_driver.c
+                         */
+                        
+                        if ((it[in].data[9] == 0) && !it[in].active) {
+                            //activate it!
+                            it[in].active = it[in].duration;
+                        }
+                        
+                        
+                    }
                         if (it[in].flags&IF_EXPIREPROC) expire_driver(in);
 
                         if (!(it[in].flags&IF_TAKE) && it[in].driver!=7) goto noexpire;

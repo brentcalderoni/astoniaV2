@@ -29,6 +29,10 @@ void pop_remove(void);
 void init_lights(void);
 int pop_create_bonus_belt(int cn);
 int pop_create_char(int n,int drop);
+
+//Mob spawning
+int pop_create_char_mob_spawner(int n,int drop, int in);
+
 void pop_wipe(void);
 void pop_reset_all(void);
 void xload(void);

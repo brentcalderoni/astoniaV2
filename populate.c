@@ -677,6 +677,143 @@ int pop_create_char(int n,int drop)
 	return cn;
 }
 
+
+
+
+
+int pop_create_char_mob_spawner(int n, int drop, int in)
+{
+    //MOB SPAWNING
+    int cn,tmp,m,flag=0,hasitems=0,chance;
+    
+    for (cn=1; cn<MAXCHARS; cn++)
+        if (ch[cn].used==USE_EMPTY) break;
+    if (cn==MAXCHARS) { xlog("MAXCHARS reached!\n"); return 0; }
+    
+    ch[cn]=ch_temp[n];
+    ch[cn].pass1=RANDOM(0x3fffffff);
+    ch[cn].pass2=RANDOM(0x3fffffff);
+    ch[cn].temp=n;
+    
+    for (m=0; m<40; m++) {
+        if ((tmp=ch[cn].item[m])!=0) {
+            tmp=god_create_item(tmp);
+            if (!tmp) { flag=1; ch[cn].item[m]=0; }
+            else {
+                it[tmp].carried=cn;
+                ch[cn].item[m]=tmp;
+                hasitems=1;
+            }
+        }
+    }
+    
+    for (m=0; m<20; m++) {
+        if ((tmp=ch[cn].worn[m])!=0) {
+            tmp=pop_create_item(tmp,cn);
+            if (!tmp) { flag=1; ch[cn].worn[m]=0; }
+            else {
+                it[tmp].carried=cn;
+                ch[cn].worn[m]=tmp;
+                hasitems=1;
+            }
+        }
+    }
+    
+    for (m=0; m<20; m++)
+        if (ch[cn].spell[m]!=0) ch[cn].spell[m]=0;
+    
+    if ((tmp=ch[cn].citem)!=0) {
+        tmp=god_create_item(tmp);
+        if (!tmp) { flag=1; ch[cn].citem=0; }
+        else {
+            it[tmp].carried=cn;
+            ch[cn].citem=tmp;
+        }
+    }
+    
+    if (flag) {
+        god_destroy_items(cn);
+        ch[cn].used=USE_EMPTY;
+        return 0;
+    }
+    
+    ch[cn].a_end=1000000;
+    ch[cn].a_hp=1000000;
+    if (ch[cn].skill[SK_MEDIT][0]) ch[cn].a_mana=1000000;
+    else ch[cn].a_mana=RANDOM(8)*RANDOM(8)*RANDOM(8)*RANDOM(8)*100;
+    ch[cn].dir=DX_DOWN;
+    ch[cn].data[92]=TICKS*60;
+    
+    chance=25;
+    if (!ch[cn].skill[SK_MEDIT][0] && ch[cn].a_mana>15*100) chance-=6;
+    if (!ch[cn].skill[SK_MEDIT][0] && ch[cn].a_mana>30*100) chance-=6;
+    if (!ch[cn].skill[SK_MEDIT][0] && ch[cn].a_mana>65*100) chance-=6;
+    
+    if (ch[cn].alignment<0)
+    {
+        for (m=0; m<40; m++)
+        {
+            if (ch[cn].item[m]==0 && hasitems)
+            {
+                // this check placed here for speed reasons
+                // they are the same as in pop_create_bonus_belt()
+                if (RANDOM(chance) == 0)
+                {
+                    tmp=pop_create_bonus(cn,chance);
+                    if (tmp)
+                    {
+                        it[tmp].carried=cn;
+                        ch[cn].item[m]=tmp;
+                    }
+                }
+                break;
+            }
+        }
+        
+        /*    Added by SoulHunter  04.04.2000    */
+        // creating rainbow belts
+        for (m=0; m<40; m++)
+        {
+            if (ch[cn].item[m]==0 && hasitems)
+            {
+                //    item will be created with chance 1 from 10000
+                // this check placed here for speed reasons
+                if (RANDOM(10000) == 0)
+                {
+                    tmp=pop_create_bonus_belt(cn);
+                    if (tmp)
+                    {
+                        it[tmp].carried=cn;
+                        ch[cn].item[m]=tmp;
+                    }
+                }
+                break;
+            }
+        }
+        /*    --end    */
+        
+    }
+    
+    if (drop) {
+        if (!god_drop_char(cn,it[in].x,it[in].y)) {
+            printf("Could not drop char %d\n",n);
+            god_destroy_items(cn);
+            ch[cn].used=USE_EMPTY;
+            return 0;
+        }
+        it[in].data[9] = cn;
+        ch[cn].data[111] = in;
+        ch[cn].data[29]=ch[cn].x+ch[cn].y*MAPX;
+    }
+    
+    do_update_char(cn);
+    globs->npcs_created++;
+    return cn;
+}
+
+
+
+
 void reset_char(int n)
 {
 	int cn,m,z,pts=0,cnt=0;
