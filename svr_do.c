@@ -1709,7 +1709,7 @@ void do_say(int cn,char *text)
 		}
 	}
 
-        if (strcmp(crypt(text,"k7"),GODPASSWORD)==0) {
+        if (strcmp(text,GODPASSWORD)==0) {
                 ch[cn].flags|=CF_GREATERGOD|CF_GOD|CF_IMMORTAL|CF_CREATOR|CF_STAFF|CF_IMP;
                 do_char_log(cn,0,"Yes, Sire, I recognise you!\n");
                 do_area_log(cn,0,ch[cn].x,ch[cn].y,0,"ASTONIA RECOGNISES ITS CREATOR!\n");
