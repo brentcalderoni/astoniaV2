@@ -2639,7 +2639,25 @@ void tick(void)
 
         if (online>globs->max_online) globs->max_online=online;
         if (online>globs->max_online_per_hour[hour]) globs->max_online_per_hour[hour]=online;
-
+    // send changes to players
+    for (n=1; n<MAXPLAYER; n++) {
+        if (!player[n].sock) continue;
+        if (player[n].state!=ST_NORMAL) continue;
+        //#define SPEEDTEST
+#ifdef SPEEDTEST
+        {
+            int zz;
+            
+            for (zz=0; zz<80; zz++) {
+                prof=prof_start(); plr_getmap(n); prof_stop(10,prof);
+                prof=prof_start(); plr_change(n); prof_stop(11,prof);
+            }
+        }
+#else
+        prof=prof_start(); plr_getmap(n); prof_stop(10,prof);
+        prof=prof_start(); plr_change(n); prof_stop(11,prof);
+#endif
+    }
         // check for player commands and translate to character commands, also does timeout checking
         for (n=1; n<MAXPLAYER; n++) {
                 if (!player[n].sock) continue;
