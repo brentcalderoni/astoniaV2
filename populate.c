@@ -854,12 +854,12 @@ void reset_char(int n)
             //Check if char is owned by a spawner if so reset the spawner jsut like in do_char_killed.
             if (ch[cn].data[97]) {
                 
-                if (it[ch[cn].data[97]].driver == 127)
+                if (it[ch[cn].data[111]].driver == 127)
                 {
                     xlog("Reseting spawner");
-                    it[ch[cn].data[97]].data[9] = 0;
-                    it[ch[cn].data[97]].active = 1;
-                    it[ch[cn].data[97]].duration = 9;
+                    it[ch[cn].data[111]].data[9] = 0;
+                    it[ch[cn].data[111]].active = 1;
+                    it[ch[cn].data[111]].duration = 9;
                 }
                 else xlog("Not a mob spawner");
                 
