@@ -852,7 +852,7 @@ void reset_char(int n)
 			xlog(" --> %s (%d) (%d,%d).",ch[cn].name,cn,ch[cn].x,ch[cn].y);
             //MOB SPAWNING
             //Check if char is owned by a spawner if so reset the spawner jsut like in do_char_killed.
-            if (ch[cn].data[97]) {
+            if (ch[cn].data[111]) {
                 
                 if (it[ch[cn].data[111]].driver == 127)
                 {
