@@ -969,7 +969,9 @@ void reset_item(int n)
 		if (it[in].temp==n) {
 			xlog(" --> %s (%d) (%d, %d,%d).",it[in].name,in,it[in].carried,it[in].x,it[in].y);
 			// make light calculations and update characters!!!
+            //MOB SPAWNING
             if (it[in].driver == 127) {
+                //sets the char temp id currently used by spawner
                 spawnerReset = it[in].data[0];
             }
 			if ((it_temp[n].flags&(IF_TAKE|IF_LOOK|IF_LOOKSPECIAL|IF_USE|IF_USESPECIAL)) || it[in].carried) {
@@ -987,6 +989,8 @@ void reset_item(int n)
 				if (it_temp[n].flags&IF_MOVEBLOCK) map[it[in].x+it[in].y*MAPX].flags|=MF_MOVEBLOCK;
 				if (it_temp[n].flags&IF_SIGHTBLOCK) map[it[in].x+it[in].y*MAPX].flags|=MF_SIGHTBLOCK;
 			}
+            //MOBSPAWNING
+            //resets the char set above
             reset_char(spawnerReset);
 		}
 	}
