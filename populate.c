@@ -955,6 +955,8 @@ void pop_skill(void)
 void reset_item(int n)
 {
 	int in;
+    //MOB SPAWNER
+    int spawnerReset;
 	struct item tmp;
 
 	if (n<2 || n>=MAXTITEM) return;	// never reset blank template (1) stuff
@@ -967,7 +969,9 @@ void reset_item(int n)
 		if (it[in].temp==n) {
 			xlog(" --> %s (%d) (%d, %d,%d).",it[in].name,in,it[in].carried,it[in].x,it[in].y);
 			// make light calculations and update characters!!!
-
+            if (it[in].driver == 127) {
+                spawnerReset = it[in].data[0];
+            }
 			if ((it_temp[n].flags&(IF_TAKE|IF_LOOK|IF_LOOKSPECIAL|IF_USE|IF_USESPECIAL)) || it[in].carried) {
 				tmp=it_temp[n];
 				tmp.x=it[in].x;
@@ -983,6 +987,7 @@ void reset_item(int n)
 				if (it_temp[n].flags&IF_MOVEBLOCK) map[it[in].x+it[in].y*MAPX].flags|=MF_MOVEBLOCK;
 				if (it_temp[n].flags&IF_SIGHTBLOCK) map[it[in].x+it[in].y*MAPX].flags|=MF_SIGHTBLOCK;
 			}
+            reset_char(spawnerReset);
 		}
 	}
 }
