@@ -854,7 +854,7 @@ void reset_char(int n)
             //Check if char is owned by a spawner if so reset the spawner jsut like in do_char_killed.
             if (ch[cn].data[97]) {
                 
-                if (it[ch[cn].data[97]].driver == 102)
+                if (it[ch[cn].data[97]].driver == 127)
                 {
                     xlog("Reseting spawner");
                     it[ch[cn].data[97]].data[9] = 0;
